@@ -300,7 +300,8 @@ impl Server {
         .layer(
           CorsLayer::new()
             .allow_methods([http::Method::GET])
-            .allow_origin(Any),
+            .allow_origin(Any)
+            .allow_origin(HeaderValue::from_static("https://arweave.com")),
         )
         .layer(CompressionLayer::new())
         .with_state(server_config.clone());
