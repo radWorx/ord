@@ -17,7 +17,7 @@ pub(super) struct RuneUpdater<'a, 'tx, 'client> {
   pub(super) transaction_id_to_rune: &'a mut Table<'tx, &'static TxidValue, u128>,
 }
 
-impl<'a, 'tx, 'client> RuneUpdater<'a, 'tx, 'client> {
+impl RuneUpdater<'_, '_, '_> {
   pub(super) fn index_runes(&mut self, tx_index: u32, tx: &Transaction, txid: Txid) -> Result<()> {
     let artifact = Runestone::decipher(tx);
 
@@ -457,7 +457,7 @@ impl<'a, 'tx, 'client> RuneUpdater<'a, 'tx, 'client> {
           .unwrap()
           + 1;
 
-        if confirmations >= Runestone::COMMIT_CONFIRMATIONS.into() {
+        if confirmations >= u32::from(Runestone::COMMIT_CONFIRMATIONS) {
           return Ok(true);
         }
       }

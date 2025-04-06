@@ -58,7 +58,7 @@ pub(super) struct InscriptionUpdater<'a, 'tx> {
   pub(super) unbound_inscriptions: u64,
 }
 
-impl<'a, 'tx> InscriptionUpdater<'a, 'tx> {
+impl InscriptionUpdater<'_, '_> {
   pub(super) fn index_inscriptions(
     &mut self,
     tx: &Transaction,
@@ -252,7 +252,7 @@ impl<'a, 'tx> InscriptionUpdater<'a, 'tx> {
     // still have to normalize over inscription size
     for flotsam in &mut floating_inscriptions {
       if let Flotsam {
-        origin: Origin::New { ref mut fee, .. },
+        origin: Origin::New { fee, .. },
         ..
       } = flotsam
       {

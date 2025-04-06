@@ -40,7 +40,7 @@ pub(crate) struct Updater<'index> {
   pub(super) sat_ranges_since_flush: u64,
 }
 
-impl<'index> Updater<'index> {
+impl Updater<'_> {
   pub(crate) fn update_index(&mut self, mut wtx: WriteTransaction) -> Result {
     let start = Instant::now();
     let starting_height = u32::try_from(self.index.client.get_block_count()?).unwrap() + 1;
@@ -100,7 +100,10 @@ impl<'index> Updater<'index> {
 
       uncommitted += 1;
 
-      if uncommitted == self.index.settings.commit_interval() {
+      if uncommitted == self.index.settings.commit_interval()
+        || (!self.index.settings.integration_test()
+          && Reorg::is_savepoint_required(self.index, self.height)?)
+      {
         self.commit(wtx, utxo_cache)?;
         utxo_cache = HashMap::new();
         uncommitted = 0;
